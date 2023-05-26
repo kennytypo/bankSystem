@@ -69,7 +69,8 @@ public class bankSystem {
                     System.out.println("1. Check balance");
                     System.out.println("2. Deposit");
                     System.out.println("3. Withdraw");
-                    System.out.println("4. EXIT");
+                    System.out.println("4. Transfer money");
+                    System.out.println("5. EXIT");
                     System.out.print("Select an action: ");
                     int action = sc.nextInt();
 
@@ -80,6 +81,12 @@ public class bankSystem {
                     } else if (action == 3) {
                         AccountMenu.withdraw();
                     } else if (action == 4) {
+                        System.out.print("Enter account ID: ");
+                        int id = sc.nextInt();
+                        System.out.print("Enter amount to transfer: ");
+                        double amount = sc.nextDouble();
+                        AccountMenu.transferMoney(id,amount);
+                    } else {
                         break;
                     }
                 }

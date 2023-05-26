@@ -89,4 +89,54 @@ public class AccountMenu {
         System.out.println("------------------------------------------");
     }
 
+    public static void transferMoney(int accountID,double amountToTransfer) throws Exception{
+        double firstAccountBalance = 0;
+        Connection connection = DataBase.connection();
+        int result = 0;
+        PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM bank_accounts WHERE account_id = ?");
+        statement.setInt(1,accountID);
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()){
+            result = resultSet.getInt(1);
+        }
+
+        if (result == 1){
+            String sql = "SELECT total_amount FROM bank_accounts WHERE account_id = ?";
+            PreparedStatement statement1 = connection.prepareStatement(sql);
+            statement1.setInt(1,ID);
+            ResultSet set = statement1.executeQuery();
+            while (set.next()){
+                firstAccountBalance = set.getDouble(1);
+            }
+
+            double secondAccountBalance = 0;
+            PreparedStatement statement4 = connection.prepareStatement("SELECT total_amount FROM bank_accounts WHERE account_id = ?");
+            statement4.setInt(1,accountID);
+            ResultSet set1 = statement4.executeQuery();
+            while (set1.next()){
+                secondAccountBalance = set1.getDouble(1);
+            }
+
+            secondAccountBalance = secondAccountBalance + amountToTransfer;
+            firstAccountBalance  = firstAccountBalance - amountToTransfer;
+            if (firstAccountBalance < 0){
+                System.out.println("----------Error! Not enough money! Try other amount!------------");
+            }else{
+                PreparedStatement statement2 = connection.prepareStatement("UPDATE bank_accounts SET total_amount = ? WHERE account_id = ?");
+                statement2.setDouble(1, firstAccountBalance);
+                statement2.setInt(2, ID);
+                statement2.executeUpdate();
+                PreparedStatement statement3 = connection.prepareStatement("UPDATE bank_accounts SET total_amount = ? WHERE account_id = ?");
+                statement3.setDouble(1,secondAccountBalance);
+                statement3.setInt(2,accountID);
+                statement3.executeUpdate();
+                getBalance();
+            }
+        }else{
+            System.out.println("Wrong account ID!");
+        }
+    }
+
+
+
 }
