@@ -63,7 +63,6 @@ public class bankSystem {
                     Authorization.auth();
                 }
             }
-
             if (Authorization.isAuth){
                 while (true){
                     System.out.println("1. Check balance");
